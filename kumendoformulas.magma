@@ -1,8 +1,6 @@
-// Explicit calculation of an endomorphism F in End(J) as a map in Mor(Kum(J), Kum(J) ) 
-// given F where J is the Jacobian of the hyperelliptic curve y^2 = x^5 - (a^5 - b^2) 
+// Explicit calculation of an endomorphism F in End(J) as a map in Mor(Kum(J), Kum(J) )
+// given F where J is the Jacobian of the hyperelliptic curve y^2 = x^5 - (a^5 - b^2)
 // This generalization for any endomorphism was thanks to the ideas provided by Prof. Michael Stoll
-// 
-// This code can be run freely in: http://magma.maths.usyd.edu.au/calc/
 //
 // Eduardo Ruiz Duarte & Marc Paul Noordman
 //
@@ -13,13 +11,13 @@ DomVarNumHomCoords := 4;
 //Image of the morphism to calculate is Kummer in P3, needs 4 coordinates
 ImageVarNumHomCoords := 4;
 
-// We are planning to calculate [sqrt(5)] map in the kummer which 
+// We are planning to calculate [sqrt(5)] map in the kummer which
 // is defined by quintic polynomials. Deg(sqrt(5))=#ker(sqrt(5))=25=5^KumDim
 HomDegTargetMap := 5;
 
 //Base field to work
 F<z> := CyclotomicField(5);
-R<x1,x2,x3,x4> := PolynomialRing(F,DomVarNumHomCoords); 
+R<x1,x2,x3,x4> := PolynomialRing(F,DomVarNumHomCoords);
 monobasis := MonomialsOfDegree(R,HomDegTargetMap);
 
 
@@ -31,8 +29,8 @@ Qx := Pt[1];
 Qy := Pt[2];
 h := Qy^2 - Qx^5;
 if h eq 0 then
-	printf "This point is not possible to use to construct a curve of the form y^2=x^5 + h\n";
-	exit;
+        printf "This point is not possible to use to construct a curve of the form y^2=x^5 + h\n";
+        exit;
 end if;
 R<X> := PolynomialRing(F);
 Jac := Jacobian(HyperellipticCurve(X^5 + h));
@@ -41,22 +39,22 @@ Kum := KummerSurface(Jac);
 Pt := Jac![X-Qx, Qy];
 // Here, you can put any element of End(J) , like 2,3,z or Sqrt(5)=1+2*z^2 +2*z^3
 
-N := 1+2*z^2+2*z^3;
+N := -1*(1+2*z^2+2*z^3);
 
 // Since we know that End(J)~= Z[z], we construct z^n*D for D in J which is just multiplying the x coordinates of the support of D by z^n
 // in MAGMA representation (Mumford)
 multzn := function (n, pt)
-		return elt<Parent(pt) | z^(pt[3]*n)*Evaluate(pt[1], z^-n*Parent(pt[1]).1), Evaluate(pt[2], z^-n*Parent(pt[2]).1), pt[3]>;
-	 end function;
+                return elt<Parent(pt) | z^(pt[3]*n)*Evaluate(pt[1], z^-n*Parent(pt[1]).1), Evaluate(pt[2], z^-n*Parent(pt[2]).1), pt[3]>;
+         end function;
 
-// This is the action of w \in End(J) ~= Z[z] on D in J. 
+// This is the action of w \in End(J) ~= Z[z] on D in J.
 // We have that w = c_0+c_1*z+c_2*z^2+c_3*z^3 in End(J), here we calculate Sum of C_i*multz(i,D)
 End_Action:= function (w, D)
-		return &+[(Integers()!s[i+1])*multzn(i,D) : i in [0..#s-1]] where s:= Eltseq(w);
+                return &+[(Integers()!s[i+1])*multzn(i,D) : i in [0..#s-1]] where s:= Eltseq(w);
 end function;
 
 
-// Here we iterate our base point Pt in J under a lot of endomorphisms 
+// Here we iterate our base point Pt in J under a lot of endomorphisms
 // to generate more points of J. Then, we also save its corresponding
 // images under N. Finally, We save these pairs of points maped to the Kummer surface
 // in order to use them to deduce the formulas of the N map
@@ -71,10 +69,10 @@ time pairs := [<Eltseq(Kum!newPt), Eltseq(Kum!(End_Action(N, newPt)))>
 // -D and D were generated in the iteration.
 
 
-// truncate to use less points, in fact 69 are needed for Sqrt[5] 
+// truncate to use less points, in fact 69 are needed for Sqrt[5]
 // do not know exactly why 69 on this case or how many are needed
 // in the general case so we comment this and use "a lot of points" instead
-//pairs := pairs[1..69];
+pairs := pairs[1..69];
 
 pairs := Setseq(Set(pairs));
 
@@ -88,44 +86,44 @@ printf "Number of interpolation points = %o\n", #pairs;
 Pts := [];
 EndActionPts:=[];
 for i:= 1 to #pairs do
-	Pts := Append(Pts,pairs[i][1]);
-	EndActionPts := Append(EndActionPts,pairs[i][2]) ;
+        Pts := Append(Pts,pairs[i][1]);
+        EndActionPts := Append(EndActionPts,pairs[i][2]) ;
 end for;
 /////////////////// END POINTS INTERPOLATION
 
 
 
 
-// final matrix that will be solved to get the coefficients of the polynomial map 
+// final matrix that will be solved to get the coefficients of the polynomial map
 // obtained from the images EndActionPts of the points Pts
 Z := ZeroMatrix(F, ImageVarNumHomCoords*#EndActionPts , ImageVarNumHomCoords*#monobasis + #EndActionPts);
 
-// This is a submatrix of Z that will hold the evaluation of Pts on each Monomial basis element 
-M := ZeroMatrix(F, #EndActionPts,#monobasis); 
+// This is a submatrix of Z that will hold the evaluation of Pts on each Monomial basis element
+M := ZeroMatrix(F, #EndActionPts,#monobasis);
 
 
-// Get all the coeficients for the monomial basis 
+// Get all the coeficients for the monomial basis
 // using our set of points
 for i:=1 to #Pts do
 for j:=1 to #monobasis do
-	M[i,j] := Evaluate(monobasis[j],Pts[i]) ; 
+        M[i,j] := Evaluate(monobasis[j],Pts[i]);
 end for;
 end for;
 
 d:=[];
 
-// The images of the interpolating points under the action 
+// The images of the interpolating points under the action
 // of the endomorphism (in diagonal matrices since
 // we want for each point homothethy, [a:b] ~ [ka:kb] therefore we have
-//#EndActionPts k variables more. These are various matrices, 
+//#EndActionPts k variables more. These are various matrices,
 // one for each coordinate of the image variety.
 V := [];
 for i:=1 to ImageVarNumHomCoords do
-	for j:=1 to #EndActionPts do
-	  	d := Append(d,-EndActionPts[j][i]); 
-	end for;
-	V := Append(V,DiagonalMatrix(F,d));
-	d := [];
+        for j:=1 to #EndActionPts do
+                d := Append(d,EndActionPts[j][i]);
+        end for;
+        V := Append(V,DiagonalMatrix(F,d));
+        d := [];
 end for;
 
 
@@ -136,9 +134,9 @@ end for;
 
 Mt := M;
 for j := 1 to ImageVarNumHomCoords-1 do
-	M := DirectSum(M,Mt);
+        M := DirectSum(M,Mt);
 end for;
- 
+
 // We insert the previous block in the final system
 Z := InsertBlock(Z,M,1,1);
 
@@ -151,11 +149,36 @@ end for;
 
 // Solve, we take the transpose since magma solves xM=v for x.
 K := KernelMatrix(Transpose(Z));
-K;
-// The last row has the solution for the coefficients of the polynomials
-S := K[Nrows(K)];
 
-// We get the scaling factor
+// We scan for the row that contains and projective solution
+// for the coefficients, usually this is in the last row
+// this solution is saved in S.
+p := [];
+t := 0;
+done := false;
+for j :=  1 to Nrows(K) do
+S := K[j];
+for k := 1 to DomVarNumHomCoords do
+        for i:=1 to #monobasis do
+         t := t+monobasis[i]*K[j][(k-1)*#monobasis + i];
+        end for;
+        p[k] := t;
+        if p[k] eq 0 then
+                break;
+        end if;
+        if k eq 4 then
+                done := true;
+        end if;
+        t := 0;
+end for;
+        if done then
+
+                break;
+        end if;
+end for;
+
+
+// We get the scaling factor of the coordinates
 //s := Lcm(Eltseq(ChangeRing(Submatrix(S,1,Ncols(S)-#Pts+1,1,#Pts),Integers())));
 
 // We cut the projective scaling factors to obtain the coefficients of the map
@@ -171,18 +194,18 @@ CoefsMap := Eltseq(Vector(CoefsMap)/scalefactor);
 MapPols := [];
 tpol := 0;
 for j := 1 to ImageVarNumHomCoords do
-	for i := 1 to #monobasis do
-		tpol := tpol+monobasis[i]*CoefsMap[i + (j-1)*#monobasis];
-		
-	end for;
-	MapPols := Append(MapPols, tpol);
-	tpol := 0;
+        for i := 1 to #monobasis do
+                tpol := tpol+monobasis[i]*CoefsMap[i + (j-1)*#monobasis];
+
+        end for;
+        MapPols := Append(MapPols, tpol);
+        tpol := 0;
 end for;
 MapPols;
 
 
 
-////// TEST formulae 
+////// TEST formulae
 p := MapPols;
 
 printf "Starting the tests of formula using Jacobian over function field\n";
@@ -199,13 +222,13 @@ genpt := elt<JR | X^2+a*X+b, c*X+d, 2>;
 Kgenpt:=KR!genpt;
 
 printf "Evaluating the generic point with our formulas and comparing with the action of N using the generic point in the Kummer Surface:\n";
-time KR![Evaluate(pf,Eltseq(Kgenpt)) : pf in p] eq KR!(End_Action(N,genpt)); 
+time KR![Evaluate(pf,Eltseq(Kgenpt)) : pf in p] eq KR!(End_Action(N,genpt));
 
 
 printf "Checking the formulas against some divisors of J/Q (just for fun, if previous is true, then this should all be true)\n";
 pt := Jac![X-Qx,Qy];
 kpt := Kum!pt;
 for n in [ -100..100 ] do
-        n;
-        Kum![Evaluate(pf,Eltseq(Kum! (n*pt) )) : pf in p] eq Kum!(End_Action(N, n*pt));
+       n;
+       Kum![Evaluate(pf,Eltseq(Kum! (n*pt) )) : pf in p] eq Kum!(End_Action(N, n*pt));
 end for;
