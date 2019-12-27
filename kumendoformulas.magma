@@ -226,10 +226,10 @@ printf "Evaluating the generic point with our formulas and comparing with the ac
 time KR![Evaluate(pf,Eltseq(Kgenpt)) : pf in p] eq KR!(End_Action(N,genpt));
 
 
-printf "Checking the formulas against some divisors of J/Q (just for fun, if previous is true, then this should all be true)\n";
-pt := Jac![X-Qx,Qy];
-kpt := Kum!pt;
-for n in [ -100..100 ] do
-       n;
-       Kum![Evaluate(pf,Eltseq(Kum! (n*pt) )) : pf in p] eq Kum!(End_Action(N, n*pt));
-end for;
+//printf "Checking the formulas against some divisors of J/Q (just for fun, if previous is true, then this should all be true)\n";
+//pt := Jac![X-Qx,Qy];
+//kpt := Kum!pt;
+//for n in [ -100..100 ] do
+//       n;
+//       Kum![Evaluate(pf,Eltseq(Kum! (n*pt) )) : pf in p] eq Kum!(End_Action(N, n*pt));
+//end for;
