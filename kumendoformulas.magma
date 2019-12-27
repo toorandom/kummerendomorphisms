@@ -2,6 +2,7 @@
 // given F where J is the Jacobian of the hyperelliptic curve y^2 = x^5 - (a^5 - b^2)
 // This generalization for any endomorphism was thanks to the ideas provided by Prof. Michael Stoll
 //
+// You can run this freely in: http://magma.maths.usyd.edu.au/calc/
 // Eduardo Ruiz Duarte & Marc Paul Noordman
 //
 
