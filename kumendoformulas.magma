@@ -210,20 +210,25 @@ MapPols;
 p := MapPols;
 
 printf "Starting the tests of formula using Jacobian over function field\n";
+// The order of the variables was chosen so that MAGMA prioritizes eliminating c and d
+// rather than a and b. This to speed up computations considerably.
 PE<C,D,A,B> := PolynomialRing(F, 4);
 RE<Z> := PolynomialRing(PE);
 eqns := Coefficients((RE!(Z^5 + h) - (C*Z+D)^2) mod (Z^2 + A*Z + B));
-RJ<c,d,a,b> := quo<PE| eqns>;
-PR<X> := PolynomialRing(RJ);
-CR := HyperellipticCurve(X^5 + h);
-JR := Jacobian(CR);
-KR := KummerSurface(JR);
+FJ<c,d,a,b> := FieldOfFractions(quo<PE| eqns>);
+PF<X> := PolynomialRing(FJ);
+CF := HyperellipticCurve(X^5 + h);
+JF := Jacobian(CF);
+KF := KummerSurface(JF);
+printf "Is our construction of the function field of J in fact a field?: %o\n", IsField(FJ);
+KF;
 //Generic point of J and its image on its Kummer
-genpt := elt<JR | X^2+a*X+b, c*X+d, 2>;
-Kgenpt:=KR!genpt;
+genpt := elt<JF | X^2+a*X+b, c*X+d, 2>;
+Kgenpt:=KF!genpt;
+
 
 printf "Evaluating the generic point with our formulas and comparing with the action of N using the generic point in the Kummer Surface:\n";
-time KR![Evaluate(pf,Eltseq(Kgenpt)) : pf in p] eq KR!(End_Action(N,genpt));
+time KF![Evaluate(pf,Eltseq(Kgenpt)) : pf in p] eq KF!(End_Action(N,genpt));
 
 
 //printf "Checking the formulas against some divisors of J/Q (just for fun, if previous is true, then this should all be true)\n";
