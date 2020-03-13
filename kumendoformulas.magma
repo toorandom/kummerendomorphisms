@@ -70,11 +70,6 @@ time pairs := [<Eltseq(Kum!newPt), Eltseq(Kum!(End_Action(N, newPt)))>
 // -D and D were generated in the iteration.
 
 
-// truncate to use less points, in fact 69 are needed for Sqrt[5]
-// do not know exactly why 69 on this case or how many are needed
-// in the general case so we comment this and use "a lot of points" instead
-//pairs := pairs[1..69];
-
 pairs := Setseq(Set(pairs));
 
 
