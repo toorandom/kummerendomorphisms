@@ -6,32 +6,39 @@
 # as described in the comment above it.
 # To change the curve via h, change the f1,f2,f3,f4 with the desired h
 # and the start_vector to match the the curve h value in its name
+# Be sure to assign the start_vectir with the correct h and m variable and also the f1,f2,f3,f4 with the correct h
 #
+
 # Marc Paul Noordman & Eduardo Ruiz Duarte
 
 #Formulas for sqrt5 for various values of h
 import kumsqrt5endomorphisms as ksq5
+
 #Starting vectors for each curve h and for each m
 import kumstartvectors as ksvectors
+
 from math import gcd, log, pow, floor
 
-# Value for m
-m = 3
+# Value for m (4*m^2 * 5^n - 1) and h for the hyperelliptic curve y^2= x^5 + h to be used.
+# Values available for precomputed Kummer endomorphism formulae are:
+#m \in {1,3,7,11}
+#h \in {2,3,31,10} 
 
-# Point P = 4*m***Q on the Kummer surface,
-# in standard coordinates. Use format start_vector_hX_mY
-# where X and Y are the values of h and m respectively.
-# it is implemented for h \in { 2,3,31,10 } and m \in {1,3,7,11}
-start_vector = ksvectors.start_vector_h10_m3
+m=11
+h=3
+
+# Coordinates for the starting point P = 4*m***Q on the Kummer surface, these points are defined in kumstartvectors
+start_vector = getattr(ksvectors,'start_vector_h'+str(h)+"_m"+str(m))
+
 
 # The polynomials giving multiplication by sqrt 5
-# on the Kummer surface, in standard coordinates.
-# Use the same h as in the starting vector.
+# on the Kummer surface, in standard coordinates. These coordinates are defined in kumsqrt5endomorphisms
+# These functions are the P3 coordinates of the Kummer Surface endomorphism
 
-f1 = ksq5.f1_h10
-f2 = ksq5.f2_h10
-f3 = ksq5.f3_h10
-f4 = ksq5.f4_h10
+f1 = getattr(ksq5,'f1_h'+str(h))
+f2 = getattr(ksq5,'f2_h'+str(h))
+f3 = getattr(ksq5,'f3_h'+str(h))
+f4 = getattr(ksq5,'f4_h'+str(h))
 
 mult_by_sqrt_5 = [f1,f2,f3,f4]
 
@@ -71,4 +78,4 @@ print ("n | Result")
 print ("--|---------------")
 for n in range(1,500):
     if n%2 == 1:
-        print (n,'|', test_primality(n))
+        print ("4*"+str(m)+"^2*5^"+str(n)+"-1",'|', test_primality(n))

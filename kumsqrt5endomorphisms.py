@@ -2,6 +2,7 @@
 # these are used by primetestkummerexample.py
 # Eduardo Ruiz Duarte & Marc Paul Noordman
 
+
 #h=2 
 f1_h2 = lambda x0,x1,x2,x3:								\
 	320*x0**3*x1**2 + 80*x0**2*x1*x3**2 + 40*x0**2*x2**2*x3 + 80*x0*x1**2*x2*x3 -   \
@@ -69,4 +70,4 @@ f3_h10 = lambda x0,x1,x2,x3:							  	    \
         5*x2*x3**4
 f4_h10 = lambda x0,x1,x2,x3:							  	    \
    	64000*x0**5 + 8000*x0**2*x1**2*x3 + 8000*x0**2*x1*x2**2 - 200*x0*x1*x3**3 - 	    \
-        1800*x0*x2**2*x3**2 + 1600*x1**5 - 200*x1*x2**3*x3 + 120*x2**5 + x3**5		    \
+        1800*x0*x2**2*x3**2 + 1600*x1**5 - 200*x1*x2**3*x3 + 120*x2**5 + x3**5		    

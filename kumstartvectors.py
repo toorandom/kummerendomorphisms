@@ -2,6 +2,10 @@
 #m=1,3,7,11 using different curves y^2=x^5 + h (h=2,3,10,31)
 #these are used by primetestkummerexample.py
 #Eduardo Ruiz Duarte & Marc Paul Noordman
+
+import sys
+sys.set_int_max_str_digits(10000000)
+
 start_vector_h2_m1 = [
 int("2624400"),
 int("-3559904"),
