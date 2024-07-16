@@ -8,3 +8,6 @@ MODIFY primetestkummerexample.py variables m and h to decide which m to use when
 Run:
 
 $ ./primetestkummerexample.py
+
+
+Or try the multicpu version primetestkummerexample_multicpu.py (which was generated with an LLM by prompting it to add support to the original python example.
